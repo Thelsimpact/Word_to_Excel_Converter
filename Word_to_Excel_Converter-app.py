@@ -10,14 +10,10 @@ st.title("📄➡️📊 Word to Excel Converter")
 # === File uploader ===
 uploaded_file = st.file_uploader("Upload a Word (.docx) file", type=["docx"])
 
-# ✅ Cache function for reading Word file
+# ✅ Extract tables directly (no caching of Document)
 @st.cache_data
-def load_docx(file):
-    return Document(file)
-
-# ✅ Cache function for extracting tables
-@st.cache_data
-def extract_tables(doc):
+def extract_tables(file):
+    doc = Document(file)
     tables = []
     for i, table in enumerate(doc.tables, start=1):
         data = []
@@ -28,11 +24,8 @@ def extract_tables(doc):
     return tables
 
 if uploaded_file is not None:
-    # Load Word document
-    doc = load_docx(uploaded_file)
-
-    # Extract tables
-    all_tables = extract_tables(doc)
+    # Extract tables as DataFrames (serializable ✅)
+    all_tables = extract_tables(uploaded_file)
 
     # User choice: merge or separate
     choice = st.radio(
