@@ -10,18 +10,29 @@ st.title("📄➡️📊 Word to Excel Converter")
 # === File uploader ===
 uploaded_file = st.file_uploader("Upload a Word (.docx) file", type=["docx"])
 
-if uploaded_file is not None:
-    # Load Word document
-    doc = Document(uploaded_file)
+# ✅ Cache function for reading Word file
+@st.cache_data
+def load_docx(file):
+    return Document(file)
 
-    # Extract tables
-    all_tables = []
+# ✅ Cache function for extracting tables
+@st.cache_data
+def extract_tables(doc):
+    tables = []
     for i, table in enumerate(doc.tables, start=1):
         data = []
         for row in table.rows:
             data.append([cell.text.strip() for cell in row.cells])
         df = pd.DataFrame(data)
-        all_tables.append((f"Table_{i}", df))
+        tables.append((f"Table_{i}", df))
+    return tables
+
+if uploaded_file is not None:
+    # Load Word document
+    doc = load_docx(uploaded_file)
+
+    # Extract tables
+    all_tables = extract_tables(doc)
 
     # User choice: merge or separate
     choice = st.radio(
