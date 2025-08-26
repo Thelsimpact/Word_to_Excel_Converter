@@ -1,3 +1,5 @@
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/93b6a89b-e706-47ca-85a3-f8832b766572" />
+
 # Word to Excel Extractor
 
 This project extracts **tables from Microsoft Word (`.docx`) files** and saves them into a clean Excel (`.xlsx`) file.  
